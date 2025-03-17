@@ -1,4 +1,5 @@
 import 'AST/Expresion.dart';
+import 'AST/Tipos.dart';
 import 'ParserBase.dart';
 import 'RuntimeError.dart';
 import 'AST/Sentencia.dart';
@@ -8,6 +9,17 @@ import 'Token.dart';
 class Parser extends ParserBase
 {
   Parser(super.tokens);
+
+  
+  List<TiposToken> tipos = [TiposToken.ENTERO,TiposToken.REAL,TiposToken.CARACTER,TiposToken.CADENA,TiposToken.TipoBooleano];
+
+  Map<TiposToken,EnumTipo> mapaTipos = {
+    TiposToken.ENTERO: EnumTipo.ENTERO,
+    TiposToken.REAL: EnumTipo.REAL,
+    TiposToken.CARACTER: EnumTipo.CARACTER,
+    TiposToken.CADENA: EnumTipo.CADENA,
+    TiposToken.TipoBooleano: EnumTipo.BOOLEANO
+  };
 
   void analisis()
   {
@@ -44,6 +56,10 @@ class Parser extends ParserBase
     {
       return escribir();
     }
+    if(encontrar([TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano]))
+    {
+      return decVariable();
+    }
     throw RuntimeError('Sentencia no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
@@ -57,6 +73,25 @@ class Parser extends ParserBase
     separador();
 
     return Escribir(expr);
+  }
+
+  Sentencia decVariable()
+  {
+    Token tipo = previo();
+    late Tipo tipoVar;
+    if(tipos.contains(tipo.tipo))
+    {
+      tipoVar = Tipo(mapaTipos[tipo.tipo]!);
+    }else
+    {
+      tipoVar = IdentificadorTipo(EnumTipo.IDENTIFICADOR, tipo);
+    }
+
+    validar(TiposToken.IDENTIFICADOR, 'Se esperaba un identificador');
+    Token identificador = previo();
+
+    separador();
+    return DecVariable(tipoVar, identificador);
   }
 
   Expresion expresion()

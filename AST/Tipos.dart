@@ -1,24 +1,28 @@
 import '../Token.dart';
 
-enum Tipo{
+enum EnumTipo{
   ENTERO,
   REAL,
   CARACTER,
   CADENA,
-  BOOLEANO
+  BOOLEANO,
+
+
+
+  IDENTIFICADOR
 }
 
-class ExprTipo
+class Tipo
 {
-  late Tipo tipo;
+  late EnumTipo tipo;
 
-  ExprTipo(this.tipo);
+  Tipo(this.tipo);
 }
 
-class IdentificadorTipo extends ExprTipo
+class IdentificadorTipo extends Tipo
 {
   late Token identificador;
-  IdentificadorTipo(Tipo tipo, Token identificador) : super(tipo)
+  IdentificadorTipo(EnumTipo tipo, Token identificador) : super(EnumTipo.IDENTIFICADOR)
   {
     this.identificador = identificador;
   }

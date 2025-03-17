@@ -8,11 +8,11 @@ void main()
 {
   try
   {
-    Lexer lexer = new Lexer('Inicio\nEscribir("a");\nFin');
+    Lexer lexer = new Lexer('Inicio\nEntero casa;\nEscribir("a");\nFin');
     Parser parser = new Parser(lexer.escanearTokens());
     parser.analisis();
     Interprete interprete = new Interprete();
-    interprete.interpretar(parser.sentencias[0]);
+    interprete.interpretar(parser.sentencias);
   }catch(e)
   {
     print(e);

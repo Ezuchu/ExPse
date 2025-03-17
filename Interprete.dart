@@ -1,4 +1,7 @@
 import 'AST/Expresion.dart';
+import 'AST/Tipos.dart';
+import 'Entorno.dart';
+import 'ExValor/ExValor.dart';
 import 'RuntimeError.dart';
 import 'AST/Sentencia.dart';
 import 'TiposToken.dart';
@@ -6,10 +9,14 @@ import 'TiposToken.dart';
 class Interprete implements VisitorExpresion,VisitorSentencia
 {
 
+  Entorno global = new Entorno();
+
   Interprete();
 
-  void interpretar(Sentencia sentencia) {
-    sentencia.aceptar(this);
+  void interpretar(List<Sentencia> sentencias) {
+    for(Sentencia sentencia in sentencias) {
+      ejecutar(sentencia);
+    }
   }
 
   void ejecutar(Sentencia sentencia) {
@@ -25,6 +32,15 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     for(Sentencia sentencia in principal.sentencias) {
       ejecutar(sentencia);
     }
+  }
+
+  @override
+  VisitaDecVariable(DecVariable decVariable) {
+    EnumTipo tipo = decVariable.tipo.tipo;
+    ExValor valor = new ExValor(tipo,5);
+    global.definir(decVariable.identificador.lexema, valor);
+
+    print(global.valores[decVariable.identificador.lexema]!.valor);
   }
 
   @override

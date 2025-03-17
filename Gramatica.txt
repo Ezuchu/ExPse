@@ -1,0 +1,57 @@
+
+
+<Programa>:= {<Declaracion>}+
+
+<Declaracion>:= 
+      <Principal>
+    | <DecVariable>
+
+<Principal>:= INICIO
+                {<Sentencia>}+
+                FIN
+
+<Sentencia>:= 
+      <Escribir>
+    | <DecVariable>
+
+<Escribir>:= ESCRIBIR'('<Expresion>')';
+
+<DecVariable>:= <Identificador> : <Tipo>;
+
+<Expresion>:= 
+      <Binario>
+    | <Unario>
+    | <Literal>
+    | <Grupo>
+
+<Binario>:= <Expresion> (+|-|*|/|%|==|!=|>|>=|<|<=) <Expresion>
+
+<Unario>:= (!|-)<Expresion>
+
+<Literal>:= 
+      <Cadena>
+    | <Caracter>
+    | <Entero>
+    | <Real>
+    | <Booleano>
+    | <Identificador>
+
+<Grupo>:= '('<Expresion>')'
+
+
+<Tipo>:= 
+    | <Primitivo>
+    | <Identificador>
+
+<Primitivo>:= (ENTERO | REAL | CADENA | CARACTER | BOOLEANO)
+
+
+<Cadena>:= "{(<Numero>|<Letra>|<Simbolo>)}*"
+<Caracter>:= '(<Numero>|<Letra>|Simbolo)'
+
+<Entero>:= {(0-9)}+
+<Real>:= {(0-9)}+ . {(0-9)}+
+
+<Booleano>:= (VERDADERO | FALSO)
+
+<Identificador>:= (<Letra>| _) {(<Letra> | <Numero> | _)}*

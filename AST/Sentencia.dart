@@ -1,4 +1,6 @@
+import '../Token.dart';
 import 'Expresion.dart';
+import 'Tipos.dart';
 
 abstract class Sentencia 
 {
@@ -20,6 +22,7 @@ abstract class VisitorSentencia<R>
 
   R VisitaPrincipal(Principal principal);
   R VisitaEscribir(Escribir escribir);
+  R VisitaDecVariable(DecVariable decVariable);
 }
 
 class Principal extends Sentencia
@@ -35,7 +38,20 @@ class Principal extends Sentencia
   R aceptar<R>(VisitorSentencia<R> visitor) {
     return visitor.VisitaPrincipal(this);
   }
+}
 
+class DecVariable extends Sentencia
+{
+  late Tipo tipo;
+  late Token identificador;
+
+  DecVariable(this.tipo, this.identificador);
+
+  @override  
+  R aceptar<R>(VisitorSentencia<R> visitor) 
+  {
+    return visitor.VisitaDecVariable(this);
+  }
 }
 
 class Escribir extends Sentencia

@@ -89,6 +89,12 @@ enum TiposToken
   VERDADERO,
   FALSO,
 
+  TipoEntero,
+  TipoReal,
+  TipoCaracter,
+  TipoCadena,
+  TipoBooleano,
+
 
   NUMERO,
   ENTERO,
@@ -146,6 +152,12 @@ const Map<String,TiposToken> mapaTipos = {
   'abrirarchivo': TiposToken.AbrirArchivo,
   'cerrararchivo': TiposToken.CerrarArchivo,
   'verdadero':TiposToken.VERDADERO,
-  'falso':TiposToken.FALSO
+  'falso':TiposToken.FALSO,
+  
+  'entero': TiposToken.TipoEntero,
+  'real': TiposToken.TipoReal,
+  'caracter':TiposToken.TipoCaracter,
+  'cadena':TiposToken.TipoCadena,
+  'bool':TiposToken.TipoBooleano,
 };
 
