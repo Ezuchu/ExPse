@@ -1,5 +1,5 @@
 import 'AST/Expresion.dart';
-import 'AST/Interprete.dart';
+import 'Interprete.dart';
 import 'Lexer.dart';
 import 'Parser.dart';
 import 'Token.dart';

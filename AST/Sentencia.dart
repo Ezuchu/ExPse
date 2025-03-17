@@ -1,4 +1,4 @@
-import 'AST/Expresion.dart';
+import 'Expresion.dart';
 
 abstract class Sentencia 
 {

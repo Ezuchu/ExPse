@@ -1,7 +1,7 @@
 import 'AST/Expresion.dart';
 import 'ParserBase.dart';
 import 'RuntimeError.dart';
-import 'Sentencia.dart';
+import 'AST/Sentencia.dart';
 import 'TiposToken.dart';
 import 'Token.dart';
 

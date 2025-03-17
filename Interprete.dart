@@ -1,7 +1,7 @@
-import 'Expresion.dart';
-import '../RuntimeError.dart';
-import '../Sentencia.dart';
-import '../TiposToken.dart';
+import 'AST/Expresion.dart';
+import 'RuntimeError.dart';
+import 'AST/Sentencia.dart';
+import 'TiposToken.dart';
 
 class Interprete implements VisitorExpresion,VisitorSentencia
 {
