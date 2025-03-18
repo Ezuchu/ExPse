@@ -44,6 +44,10 @@ class Parser extends ParserBase
     {
       return principal();
     }
+    if(encontrar([TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano]))
+    {
+      return decVariable();
+    }
     throw RuntimeError('Declaración no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 

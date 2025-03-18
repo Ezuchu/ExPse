@@ -14,10 +14,14 @@ import 'Token.dart';
 
 class Interprete implements VisitorExpresion,VisitorSentencia
 {
-
   Entorno global = new Entorno();
 
-  Interprete();
+  late Entorno entorno;
+
+  Interprete()
+  {
+    this.entorno = global;
+  }
 
   void interpretar(List<Sentencia> sentencias) {
     for(Sentencia sentencia in sentencias) {
@@ -35,18 +39,24 @@ class Interprete implements VisitorExpresion,VisitorSentencia
 
   @override
   VisitaPrincipal(Principal principal) {
+    Entorno previo = this.entorno;
+    this.entorno = Entorno.local(previo);
+
     for(Sentencia sentencia in principal.sentencias) {
       ejecutar(sentencia);
     }
+
+    this.entorno = previo;
+    print(this.entorno.valores['casa']);
   }
 
   @override
   VisitaDecVariable(DecVariable decVariable) {
-    print(decVariable.tipo.tipo);
+    
     ExValor valor = genValor(decVariable.tipo);
-    global.definir(decVariable.identificador.lexema, valor);
+    this.entorno.definir(decVariable.identificador.lexema, valor);
 
-    print(global.valores[decVariable.identificador.lexema]!);
+    
   }
 
   @override
@@ -66,13 +76,13 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       throw RuntimeError('Tipos incompatibles', identificador.fila, null, 2);
     }
     
-    global.valores[identificador.lexema] = valor;
+    this.entorno.valores[identificador.lexema] = valor;
   }
 
   @override
   ExValor VisitaVariable(Variable variable)
   {
-    return global.obtener(variable.identificador);
+    return this.entorno.obtener(variable.identificador);
   }
 
   @override  
