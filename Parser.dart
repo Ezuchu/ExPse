@@ -11,13 +11,13 @@ class Parser extends ParserBase
   Parser(super.tokens);
 
   
-  List<TiposToken> tipos = [TiposToken.ENTERO,TiposToken.REAL,TiposToken.CARACTER,TiposToken.CADENA,TiposToken.TipoBooleano];
+  List<TiposToken> tipos = [TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano];
 
   Map<TiposToken,EnumTipo> mapaTipos = {
-    TiposToken.ENTERO: EnumTipo.ENTERO,
-    TiposToken.REAL: EnumTipo.REAL,
-    TiposToken.CARACTER: EnumTipo.CARACTER,
-    TiposToken.CADENA: EnumTipo.CADENA,
+    TiposToken.TipoEntero: EnumTipo.ENTERO,
+    TiposToken.TipoReal: EnumTipo.REAL,
+    TiposToken.TipoCaracter: EnumTipo.CARACTER,
+    TiposToken.TipoCadena: EnumTipo.CADENA,
     TiposToken.TipoBooleano: EnumTipo.BOOLEANO
   };
 

@@ -8,7 +8,7 @@ void main()
 {
   try
   {
-    Lexer lexer = new Lexer('Inicio\nEntero casa;\nEscribir("a");\nFin');
+    Lexer lexer = new Lexer('Inicio\nBool casa;\nEscribir("a");\nFin');
     Parser parser = new Parser(lexer.escanearTokens());
     parser.analisis();
     Interprete interprete = new Interprete();

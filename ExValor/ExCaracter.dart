@@ -1,11 +1,11 @@
 import '../AST/Tipos.dart';
 import 'ExValor.dart';
 
-class ExEntero extends ExValor 
+class ExCaracter extends ExValor
 {
-  late int? valor;
+  late String? valor;
 
-  ExEntero(int? valor) : super(EnumTipo.ENTERO)
+  ExCaracter(String? valor): super(EnumTipo.CARACTER)
   {
     this.valor = valor;
   }

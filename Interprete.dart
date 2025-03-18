@@ -1,6 +1,11 @@
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
 import 'Entorno.dart';
+import 'ExValor/ExBool.dart';
+import 'ExValor/ExCadena.dart';
+import 'ExValor/ExCaracter.dart';
+import 'ExValor/ExEntero.dart';
+import 'ExValor/ExReal.dart';
 import 'ExValor/ExValor.dart';
 import 'RuntimeError.dart';
 import 'AST/Sentencia.dart';
@@ -36,11 +41,11 @@ class Interprete implements VisitorExpresion,VisitorSentencia
 
   @override
   VisitaDecVariable(DecVariable decVariable) {
-    EnumTipo tipo = decVariable.tipo.tipo;
-    ExValor valor = new ExValor(tipo,5);
+    print(decVariable.tipo.tipo);
+    ExValor valor = genValor(decVariable.tipo);
     global.definir(decVariable.identificador.lexema, valor);
 
-    print(global.valores[decVariable.identificador.lexema]!.valor);
+    print(global.valores[decVariable.identificador.lexema]!);
   }
 
   @override
@@ -105,5 +110,20 @@ class Interprete implements VisitorExpresion,VisitorSentencia
         return null;
     }
     
+  }
+
+  ExValor genValor(Tipo tipo)
+  {
+    switch(tipo.tipo)
+    {
+      case EnumTipo.ENTERO : return ExEntero(5);
+      case EnumTipo.REAL : return ExReal(7.8);
+      case EnumTipo.CARACTER : return ExCaracter('a');
+      case EnumTipo.CADENA : return ExCadena('xde');
+      case EnumTipo.BOOLEANO : return ExBool(true);
+
+      default:
+        return ExEntero(5);
+    }
   }
 }

@@ -1,9 +1,10 @@
 import '../AST/Tipos.dart';
 
-class ExValor 
+abstract class ExValor 
 {
   late EnumTipo tipo;
-  late Object? valor;
 
-  ExValor(this.tipo,this.valor);
+  ExValor(this.tipo);
+
+  
 }
