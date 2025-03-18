@@ -21,8 +21,10 @@ abstract class VisitorSentencia<R>
   R VisitaClase(Clase clase);*/
 
   R VisitaPrincipal(Principal principal);
-  R VisitaEscribir(Escribir escribir);
   R VisitaDecVariable(DecVariable decVariable);
+  R VisitaEscribir(Escribir escribir);
+  R VisitaAsignacion(Asignacion asignacion);
+  
 }
 
 class Principal extends Sentencia
@@ -66,5 +68,19 @@ class Escribir extends Sentencia
   @override
   R aceptar<R>(VisitorSentencia<R> visitor) {
     return visitor.VisitaEscribir(this);
+  }
+}
+
+class Asignacion extends Sentencia
+{
+  late Token identificador;
+  late Expresion valor;
+
+  Asignacion(this.identificador,this.valor);
+
+  @override
+  R aceptar<R>(VisitorSentencia<R> visitor)
+  {
+    return visitor.VisitaAsignacion(this);
   }
 }

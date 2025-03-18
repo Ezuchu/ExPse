@@ -1,4 +1,5 @@
 import '../Token.dart';
+import 'Tipos.dart';
 
 abstract class Expresion 
 {
@@ -10,6 +11,7 @@ abstract class VisitorExpresion<R>{
   R VisitaGrupo(Grupo grupo);
   R VisitaLiteral(Literal literal);
   R VisitaUnario(Unario unario);
+  R VisitaVariable(Variable variable);
 }
 
 class Binario extends Expresion
@@ -48,15 +50,12 @@ class Grupo extends Expresion
 class Literal extends Expresion
 {
   late Object? valor;
+  late EnumTipo tipo;
   late int columna;
   late int fila;
 
-  Literal(Object? valor,int columna,int fila)
-  {
-    this.valor = valor;
-    this.columna = columna;
-    this.fila = fila;
-  }
+  Literal(this.valor,this.tipo,this.columna,this.fila);
+ 
 
   @override
   R aceptar<R>(VisitorExpresion visitor) {
@@ -79,6 +78,20 @@ class Unario extends Expresion
   R aceptar<R>(VisitorExpresion visitor) {
     return visitor.VisitaUnario(this);
   }
+}
+
+class Variable extends Expresion
+{
+  late Token identificador;
+
+  Variable(this.identificador);
+
+  @override
+  R aceptar<R>(VisitorExpresion visitor)
+  {
+    return visitor.VisitaVariable(this);
+  }
+
 }
 
 

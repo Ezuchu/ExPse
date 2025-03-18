@@ -21,6 +21,14 @@ class Parser extends ParserBase
     TiposToken.TipoBooleano: EnumTipo.BOOLEANO
   };
 
+  Map<TiposToken,EnumTipo> mapaTiposLiteral = 
+  {
+    TiposToken.ENTERO: EnumTipo.ENTERO,
+    TiposToken.REAL: EnumTipo.REAL,
+    TiposToken.CARACTER: EnumTipo.CARACTER,
+    TiposToken.CADENA: EnumTipo.CADENA
+  };
+
   void analisis()
   {
     while(!llegoFinal())
@@ -60,6 +68,14 @@ class Parser extends ParserBase
     {
       return decVariable();
     }
+    if(encontrar([TiposToken.IDENTIFICADOR]))
+    {
+      Token identificador = previo();
+      if(!encontrar([TiposToken.PARENT_IZQ]))
+      {
+        return asignacion(identificador);
+      }
+    }
     throw RuntimeError('Sentencia no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
@@ -92,6 +108,15 @@ class Parser extends ParserBase
 
     separador();
     return DecVariable(tipoVar, identificador);
+  }
+
+  Sentencia asignacion(Token identificador)
+  {
+    validar(TiposToken.Igual, 'Se esperaba \'=\'');
+    Expresion expr = expresion();
+    separador();
+
+    return Asignacion(identificador, expr);
   }
 
   Expresion expresion()
@@ -176,10 +201,19 @@ class Parser extends ParserBase
 
   Expresion literal()
   {
-    if(encontrar([TiposToken.VERDADERO])){return Literal(true,previo().columna,previo().fila);}
-    if(encontrar([TiposToken.FALSO])){return Literal(false, previo().columna, previo().fila);}
+    if(encontrar([TiposToken.VERDADERO])){return Literal(true,EnumTipo.BOOLEANO,previo().columna,previo().fila);}
+    if(encontrar([TiposToken.FALSO])){return Literal(false, EnumTipo.BOOLEANO,previo().columna, previo().fila);}
 
-    if(encontrar([TiposToken.ENTERO,TiposToken.REAL,TiposToken.CARACTER,TiposToken.CADENA])){return Literal(previo().literal,previo().columna,previo().fila);}
+    if(encontrar([TiposToken.ENTERO,TiposToken.REAL,TiposToken.CARACTER,TiposToken.CADENA]))
+    {
+      EnumTipo tipo = mapaTiposLiteral[previo().tipo]!;
+      return Literal(previo().literal,tipo,previo().columna,previo().fila);
+    }
+
+    if(encontrar([TiposToken.IDENTIFICADOR]))
+    {
+      return Variable(previo());
+    }
 
     if(encontrar([TiposToken.PARENT_IZQ]))
     {

@@ -1,6 +1,7 @@
 import 'dart:collection';
 
 import 'ExValor/ExValor.dart';
+import 'RuntimeError.dart';
 import 'Token.dart';
 
 class Entorno 
@@ -22,5 +23,13 @@ class Entorno
       throw Exception('Variable no definida');
     }
     return valor;
+  }
+
+  void existe(Token id)
+  {
+    if(!valores.containsKey(id.lexema))
+    {
+      throw RuntimeError('Variable no definida',id.fila,null,2);
+    }
   }
 }

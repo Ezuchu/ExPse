@@ -6,5 +6,7 @@ abstract class ExValor
 
   ExValor(this.tipo);
 
+  get valor => null;
+
   
 }
