@@ -22,6 +22,7 @@ abstract class VisitorSentencia<R>
 
   R VisitaPrincipal(Principal principal);
   R VisitaDecVariable(DecVariable decVariable);
+  R VisitaDecConstante(DecConstante decConstante);
   R VisitaEscribir(Escribir escribir);
   R VisitaAsignacion(Asignacion asignacion);
   
@@ -46,13 +47,32 @@ class DecVariable extends Sentencia
 {
   late Tipo tipo;
   late Token identificador;
+  Expresion? valor;
 
   DecVariable(this.tipo, this.identificador);
+
+  DecVariable.inicializar(this.tipo,this.identificador,this.valor);
+
+
 
   @override  
   R aceptar<R>(VisitorSentencia<R> visitor) 
   {
     return visitor.VisitaDecVariable(this);
+  }
+}
+
+class DecConstante extends Sentencia
+{
+  late Token identificador;
+  late Expresion valor;
+
+  DecConstante(this.identificador,this.valor);
+
+  @override
+  R aceptar<R>(VisitorSentencia<R> visitor)
+  {
+    return visitor.VisitaDecConstante(this);
   }
 }
 

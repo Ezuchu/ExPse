@@ -47,16 +47,20 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     }
 
     this.entorno = previo;
-    print(this.entorno.valores['casa']);
+    
   }
 
   @override
   VisitaDecVariable(DecVariable decVariable) {
-    
-    ExValor valor = genValor(decVariable.tipo);
+    ExValor valor = genValor(decVariable.tipo,decVariable.valor,decVariable.identificador);
     this.entorno.definir(decVariable.identificador.lexema, valor);
+  }
 
-    
+  @override  
+  VisitaDecConstante(DecConstante decConstante) {
+    ExValor valor = evaluar(decConstante.valor);
+    valor.constante = true;
+    this.entorno.definir(decConstante.identificador.lexema, valor);
   }
 
   @override
@@ -70,7 +74,13 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     Token identificador = asignacion.identificador;
 
     ExValor inicial = global.obtener(identificador);
+    if(inicial.constante)
+    {
+      throw RuntimeError('No se puede modificar una constante', identificador.fila,null,2);
+    }
+
     ExValor valor = evaluar(asignacion.valor);
+    valor.constante = false;
 
     if(inicial.tipo != valor.tipo) {
       throw RuntimeError('Tipos incompatibles', identificador.fila, null, 2);
@@ -172,15 +182,26 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     
   }
 
-  ExValor genValor(Tipo tipo)
+  ExValor genValor(Tipo tipo,Expresion? valor,Token id)
   {
+    Object? inicial = null;
+    if(valor != null)
+    {
+      ExValor val = evaluar(valor);
+      if(val.tipo != tipo.tipo)
+      {
+        throw RuntimeError('Tipos incompatibles', id.fila, null, 2);
+      }
+      inicial = val.valor;
+    }
+
     switch(tipo.tipo)
     {
-      case EnumTipo.ENTERO : return ExEntero(5);
-      case EnumTipo.REAL : return ExReal(7.8);
-      case EnumTipo.CARACTER : return ExCaracter('a');
-      case EnumTipo.CADENA : return ExCadena('xde');
-      case EnumTipo.BOOLEANO : return ExBool(true);
+      case EnumTipo.ENTERO : return ExEntero(inicial as int?);
+      case EnumTipo.REAL : return ExReal(inicial as double?);
+      case EnumTipo.CARACTER : return ExCaracter(inicial as String?);
+      case EnumTipo.CADENA : return ExCadena(inicial as String?);
+      case EnumTipo.BOOLEANO : return ExBool(inicial as bool?);
 
       default:
         return ExEntero(5);

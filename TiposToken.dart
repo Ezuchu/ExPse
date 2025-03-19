@@ -14,7 +14,7 @@ enum TiposToken
   //Palabras reservadas
   Algoritmo,
   Declaracion,
-  Constantes,
+  Constante,
   Variables,
   Inicio,
   Fin,
@@ -119,7 +119,7 @@ const Map<String,TiposToken> mapaTipos = {
   ';': TiposToken.PUNTOYCOMA,
   'algoritmo': TiposToken.Algoritmo,
   'declaracion': TiposToken.Declaracion,
-  'constantes': TiposToken.Constantes,
+  'constante': TiposToken.Constante,
   'variables': TiposToken.Variables,
   'inicio': TiposToken.Inicio,
   'fin': TiposToken.Fin,

@@ -48,6 +48,10 @@ class Parser extends ParserBase
     {
       return decVariable();
     }
+    if(encontrar([TiposToken.Constante]))
+    {
+      return decConstante();
+    }
     throw RuntimeError('Declaración no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
@@ -110,8 +114,27 @@ class Parser extends ParserBase
     validar(TiposToken.IDENTIFICADOR, 'Se esperaba un identificador');
     Token identificador = previo();
 
+    if(encontrar([TiposToken.Igual]))
+    {
+      Expresion valor = expresion();
+      separador();
+      return DecVariable.inicializar(tipoVar, identificador, valor);
+    }
+
     separador();
     return DecVariable(tipoVar, identificador);
+  }
+
+  Sentencia decConstante()
+  {
+    validar(TiposToken.IDENTIFICADOR, 'Se esperaba un identificador');
+    Token identificador = previo();
+
+    validar(TiposToken.Igual, 'Se esperaba \'=\'');
+    Expresion valor = expresion();
+    separador();
+
+    return DecConstante(identificador, valor);
   }
 
   Sentencia asignacion(Token identificador)

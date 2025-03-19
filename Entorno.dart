@@ -32,7 +32,6 @@ class Entorno
     {
       if(this.anterior != null)
       {
-        print('a');
         return this.anterior!.obtener(id);
       }else
       {
