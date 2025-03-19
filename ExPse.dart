@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'AST/Expresion.dart';
 import 'Interprete.dart';
 import 'Lexer.dart';
@@ -8,7 +9,9 @@ void main()
 {
   try
   {
-    Lexer lexer = new Lexer('constante casa = 19.8;\nInicio\nReal casa2 = casa+1\nEscribir(casa2);\nFin');
+    String codigo = File("Ejemplo.exp").readAsStringSync();
+
+    Lexer lexer = new Lexer(codigo);
     Parser parser = new Parser(lexer.escanearTokens());
     parser.analisis();
     Interprete interprete = new Interprete();

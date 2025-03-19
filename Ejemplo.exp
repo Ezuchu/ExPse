@@ -1,0 +1,4 @@
+Inicio
+    Cadena Bienvenida = "Hola mundo";
+    escribir(Bienvenida);
+Fin

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
 import 'Entorno.dart';
@@ -67,6 +69,46 @@ class Interprete implements VisitorExpresion,VisitorSentencia
   VisitaEscribir(Escribir escribir) {
     ExValor valor = evaluar(escribir.expresion);
     print(valor);
+  }
+
+  @override  
+  VisitaLeer(Leer leer) {
+    Token identificador = leer.variable.identificador;
+    ExValor variable = entorno.obtener(identificador);
+    late ExValor nValor;
+
+    if(variable.constante)
+    {
+      throw RuntimeError('No se puede modificar una constante', identificador.fila,null,2);
+    }
+    if(variable is ExBool)
+    {
+      throw RuntimeError('No se puede leer un booleano', identificador.fila,null,2);
+    }
+
+    String entrada = stdin.readLineSync()!;
+
+    switch(variable.tipo)
+    {
+      case EnumTipo.ENTERO:
+        esEntero(entrada,identificador);
+        nValor = ExEntero(int.parse(entrada));
+        break;
+      case EnumTipo.REAL:
+        esReal(entrada,identificador);
+        nValor = ExReal(double.parse(entrada));
+        break;
+      case EnumTipo.CARACTER:
+        nValor = ExCaracter(entrada);
+        break;
+      case EnumTipo.CADENA:
+        nValor = ExCadena(entrada);
+        break;
+      default:
+        throw RuntimeError('Tipo no soportado para lectura', identificador.fila,null,2);
+    }
+
+    this.entorno.valores[identificador.lexema] = nValor;
   }
 
   @override
@@ -180,6 +222,28 @@ class Interprete implements VisitorExpresion,VisitorSentencia
         return null;
     }
     
+  }
+
+  void esEntero(String entrada,Token id)
+  {
+    try
+    {
+      int.parse(entrada);
+    }catch(e)
+    {
+      throw RuntimeError('Valor no es un entero', id.fila,null,2);
+    }
+  }
+
+  void esReal(String entrada,Token id)
+  {
+    try
+    {
+      double.parse(entrada);
+    }catch(e)
+    {
+      throw RuntimeError('Valor no es un real', id.fila,null,2);
+    }
   }
 
   ExValor genValor(Tipo tipo,Expresion? valor,Token id)

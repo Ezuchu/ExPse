@@ -24,6 +24,7 @@ abstract class VisitorSentencia<R>
   R VisitaDecVariable(DecVariable decVariable);
   R VisitaDecConstante(DecConstante decConstante);
   R VisitaEscribir(Escribir escribir);
+  R VisitaLeer(Leer leer);
   R VisitaAsignacion(Asignacion asignacion);
   
 }
@@ -88,6 +89,19 @@ class Escribir extends Sentencia
   @override
   R aceptar<R>(VisitorSentencia<R> visitor) {
     return visitor.VisitaEscribir(this);
+  }
+}
+
+class Leer extends Sentencia
+{
+  late Variable variable;
+
+  Leer(this.variable);
+
+  @override
+  R aceptar<R>(VisitorSentencia<R> visitor)
+  {
+    return visitor.VisitaLeer(this);
   }
 }
 

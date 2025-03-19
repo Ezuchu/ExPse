@@ -68,14 +68,16 @@ class Parser extends ParserBase
 
   Sentencia sentencia()
   {
-    if(encontrar([TiposToken.Escribir]))
-    {
-      return escribir();
-    }
+    
     if(encontrar([TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano]))
     {
       return decVariable();
     }
+    if(encontrar([TiposToken.Constante]))
+    {
+      return decConstante();
+    }
+
     if(encontrar([TiposToken.IDENTIFICADOR]))
     {
       Token identificador = previo();
@@ -84,20 +86,19 @@ class Parser extends ParserBase
         return asignacion(identificador);
       }
     }
+
+    if(encontrar([TiposToken.Escribir]))
+    {
+      return escribir();
+    }
+    if(encontrar([TiposToken.Leer]))
+    {
+      return leer();
+    }
     throw RuntimeError('Sentencia no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
-  Sentencia escribir()
-  {
-    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
-
-    Expresion expr = expresion();
-
-    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
-    separador();
-
-    return Escribir(expr);
-  }
+  
 
   Sentencia decVariable()
   {
@@ -135,6 +136,29 @@ class Parser extends ParserBase
     separador();
 
     return DecConstante(identificador, valor);
+  }
+
+  Sentencia escribir()
+  {
+    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
+
+    Expresion expr = expresion();
+
+    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
+    separador();
+
+    return Escribir(expr);
+  }
+
+  Sentencia leer()
+  {
+    Expresion variable = literal();
+    if(variable is! Variable)
+    {
+      throw RuntimeError('Se esperaba una variable', tokenAct.fila, tokenAct.columna, 1);
+    }
+    separador();
+    return Leer(variable as Variable);
   }
 
   Sentencia asignacion(Token identificador)
