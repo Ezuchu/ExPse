@@ -216,10 +216,59 @@ class Interprete implements VisitorExpresion,VisitorSentencia
           }
         }
         throw RuntimeError("Operador '-' solo puede aplicarse entre números", binario.operador.fila, null, 2);
-        
+
+      case TiposToken.Por:
+        if((izquierda.tipo == EnumTipo.REAL || izquierda.tipo == EnumTipo.ENTERO) && (derecha.tipo == EnumTipo.REAL || derecha.tipo == EnumTipo.ENTERO)) {
+          if(izquierda.tipo == EnumTipo.REAL || derecha.tipo == EnumTipo.REAL)
+          {
+            return new ExReal(izquierda.valor! * derecha.valor!);
+          }else
+          {
+            return new ExEntero(izquierda.valor! * derecha.valor!);
+          }
+        }
+        throw RuntimeError("Operador '*' solo puede aplicarse entre números", binario.operador.fila, null, 2);
+
+      case TiposToken.Div:
+        try
+        {
+          return new ExReal(izquierda.valor! / derecha.valor!);
+        }catch(e)
+        {
+          throw RuntimeError("Solo puede haber numeros en la division", binario.operador.fila, null, 2);
+        } 
+
+      case TiposToken.Mod:
+        if(izquierda.tipo == EnumTipo.ENTERO && derecha.tipo == EnumTipo.ENTERO) {
+          return new ExEntero(izquierda.valor! % derecha.valor!);
+        }
+        throw RuntimeError("Operador '%' solo puede aplicarse entre enteros", binario.operador.fila, null, 2);
+      
+
+      case TiposToken.DobleIgual:
+        return new ExBool(izquierda.valor == derecha.valor);
+      
+      case TiposToken.Diferente:
+        return new ExBool(izquierda.valor != derecha.valor);
+
+      case TiposToken.Mayor:
+        ambosNumeros(izquierda.valor,derecha.valor,binario.operador);
+        return new ExBool(izquierda.valor! > derecha.valor!);
+
+      case TiposToken.Menor:
+        ambosNumeros(izquierda.valor,derecha.valor,binario.operador);
+        return new ExBool(izquierda.valor! < derecha.valor!);
+      
+      case TiposToken.MayorIgual:
+        ambosNumeros(izquierda.valor,derecha.valor,binario.operador);
+        return new ExBool(izquierda.valor! >= derecha.valor!);
+
+      case TiposToken.MenorIgual:
+        ambosNumeros(izquierda.valor,derecha.valor,binario.operador);
+        return new ExBool(izquierda.valor! <= derecha.valor!);
 
       default:
-        return null;
+        throw RuntimeError('Operador no soportado', binario.operador.fila, null, 2);
     }
     
   }
@@ -243,6 +292,14 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     }catch(e)
     {
       throw RuntimeError('Valor no es un real', id.fila,null,2);
+    }
+  }
+
+  void ambosNumeros(Object izquierda,Object derecha,Token operador)
+  {
+    if(izquierda is! num || derecha is! num)
+    {
+      throw RuntimeError('Ambos operandos deben ser numéricos', operador.fila,null,2);
     }
   }
 

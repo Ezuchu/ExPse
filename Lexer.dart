@@ -1,6 +1,5 @@
 import 'LexerBase.dart';
 import 'RuntimeError.dart';
-import 'Token.dart';
 import 'TiposToken.dart';
 
 class Lexer extends LexerBase
@@ -173,6 +172,7 @@ class Lexer extends LexerBase
       throw RuntimeError('Caracter no cerrado',fila,columna,0);
     }
     continuar();
+    sumarToken(TiposToken.CARACTER, caracter, caracter);
 
   }
 
