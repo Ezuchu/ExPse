@@ -95,7 +95,12 @@ class Parser extends ParserBase
     {
       return leer();
     }
-    throw RuntimeError('Sentencia no válida', tokenAct.fila, tokenAct.columna, 1);
+
+    if(encontrar([TiposToken.Si]))
+    {
+      return condicional();
+    }
+    throw RuntimeError('Sentencia ${tokenAct.lexema} no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
   
@@ -161,6 +166,33 @@ class Parser extends ParserBase
     return Leer(variable as Variable);
   }
 
+  Sentencia condicional()
+  {
+    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
+    Expresion condicion = expresion();
+    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
+
+    List<Sentencia> entonces = [];
+    while(!encontrar([TiposToken.Sino,TiposToken.Fsi]))
+    {
+      entonces.add(sentencia());
+    }
+    List<Sentencia> sino = [];
+
+    
+
+    if(previo().tipo == TiposToken.Sino)
+    {
+      while(!encontrar([TiposToken.Fsi]))
+      {
+        
+        sino.add(sentencia());
+      }
+    }
+
+    return Condicional(condicion, entonces, sino);
+  }
+
   Sentencia asignacion(Token identificador)
   {
     validar(TiposToken.Igual, 'Se esperaba \'=\'');
@@ -170,9 +202,39 @@ class Parser extends ParserBase
     return Asignacion(identificador, expr);
   }
 
+  
+
   Expresion expresion()
   {
-    return igualdad();
+    return disyuncion();
+  }
+
+  Expresion disyuncion()
+  {
+    Expresion izq = conjucion();
+
+    while(encontrar([TiposToken.O]))
+    {
+      Token operador = previo();
+      Expresion der = conjucion();
+      izq = Logico(izq, operador, der);
+    }
+
+    return izq;
+  }
+
+  Expresion conjucion()
+  {
+    Expresion izq = igualdad();
+
+    while(encontrar([TiposToken.Y]))
+    {
+      Token operador = previo();
+      Expresion der = igualdad();
+      izq = Logico(izq, operador, der);
+    }
+
+    return izq;
   }
 
   Expresion igualdad()
@@ -191,6 +253,7 @@ class Parser extends ParserBase
 
     return izq;
   }
+
 
   Expresion comparacion()
   {

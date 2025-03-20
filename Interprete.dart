@@ -35,6 +35,12 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     sentencia.aceptar(this);
   }
 
+  void conjunto(List<Sentencia> sentencias) {
+    for(Sentencia sentencia in sentencias) {
+      ejecutar(sentencia);
+    }
+  }
+
   ExValor evaluar(Expresion expresion) {
     return expresion.aceptar(this);
   }
@@ -131,6 +137,28 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     this.entorno.valores[identificador.lexema] = valor;
   }
 
+  @override  
+  VisitaCondicional(Condicional condicional)
+  {
+    ExValor condicion = evaluar(condicional.condicion);
+
+    Entorno previo = this.entorno;
+    this.entorno = Entorno.local(previo);
+
+    if(condicion.valor == true)
+    {
+      conjunto(condicional.Entonces);
+    }else
+    {
+      if(condicional.Sino != null)
+      {
+        conjunto(condicional.Sino!);
+      }
+    }
+
+    this.entorno = previo;
+  }
+
   @override
   ExValor VisitaVariable(Variable variable)
   {
@@ -155,6 +183,28 @@ class Interprete implements VisitorExpresion,VisitorSentencia
   @override
   ExValor VisitaGrupo(Grupo grupo) {
     return evaluar(grupo.expresion);
+  }
+
+  @override
+  ExValor? VisitaLogico(Logico logico)
+  {
+    ExValor izquierda = evaluar(logico.izq);
+    ExValor derecha = evaluar(logico.der);
+
+    if(izquierda.tipo != EnumTipo.BOOLEANO || derecha.tipo != EnumTipo.BOOLEANO)
+    {
+      throw RuntimeError('Ambos operandos deben ser booleanos', logico.operador.fila, null, 2);
+    }
+
+    switch(logico.operador.tipo)
+    {
+      case TiposToken.Y:
+        return new ExBool(izquierda.valor! && derecha.valor!);
+      case TiposToken.O:
+        return new ExBool(izquierda.valor! || derecha.valor!);
+      default:
+        return null;
+    }
   }
 
   @override

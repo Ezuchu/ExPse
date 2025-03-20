@@ -1,3 +1,7 @@
 Inicio
-    escribir(5 <= 6);
+    si(4 == 2+3)
+        escribir("hola");
+    sino
+        escribir("mundo");
+    fsi
 Fin

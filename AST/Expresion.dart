@@ -11,6 +11,7 @@ abstract class VisitorExpresion<R>{
   R VisitaGrupo(Grupo grupo);
   R VisitaLiteral(Literal literal);
   R VisitaUnario(Unario unario);
+  R VisitaLogico(Logico logico);
   R VisitaVariable(Variable variable);
 }
 
@@ -77,6 +78,25 @@ class Unario extends Expresion
   @override
   R aceptar<R>(VisitorExpresion visitor) {
     return visitor.VisitaUnario(this);
+  }
+}
+
+class Logico extends Expresion
+{
+  late Expresion izq;
+  late Token operador;
+  late Expresion der;
+
+  Logico(Expresion izq,Token operador,Expresion der)
+  {
+    this.izq = izq;
+    this.operador = operador;
+    this.der = der;
+  }
+
+  @override
+  R aceptar<R>(VisitorExpresion visitor) {
+    return visitor.VisitaLogico(this);
   }
 }
 

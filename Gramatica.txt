@@ -5,6 +5,7 @@
 <Declaracion>:= 
       <Principal>
     | <DecVariable>
+    | <DecConstante>
 
 <Principal>:= INICIO
                 {<Sentencia>}+
@@ -12,17 +13,36 @@
 
 <Sentencia>:= 
       <Escribir>
+    | <Leer>
+    | <Control> 
     | <DecVariable>
+    | <DecConstante>
+    | <Asignacion>
+
+<Asignacion> := <Variable> = <Expresion>;
 
 <Escribir>:= ESCRIBIR'('<Expresion>')';
+<Leer>:= LEER <Variable>;
 
-<DecVariable>:= <Identificador> : <Tipo>;
+<Control>:= <Condicional>
 
-<Expresion>:= 
-      <Binario>
+<Condicional>:= SI '('<Expresion>')'
+                  {Sentencia}+
+                [SINO 
+                  {Sentencia}+]
+                FSI
+
+<DecVariable>:= <Tipo> <Identificador> [= <Expresion>];
+<DecConstante>:= CONSTANTE <Identificador> = <Expresion>;
+
+<Expresion>:=
+      <Logico>
+    | <Binario>
     | <Unario>
     | <Literal>
     | <Grupo>
+
+<Logico>:= <Expresion> (Y|O) <Expresion>
 
 <Binario>:= <Expresion> (+|-|*|/|%|==|!=|>|>=|<|<=) <Expresion>
 

@@ -26,6 +26,7 @@ abstract class VisitorSentencia<R>
   R VisitaEscribir(Escribir escribir);
   R VisitaLeer(Leer leer);
   R VisitaAsignacion(Asignacion asignacion);
+  R VisitaCondicional(Condicional condicional);
   
 }
 
@@ -116,5 +117,20 @@ class Asignacion extends Sentencia
   R aceptar<R>(VisitorSentencia<R> visitor)
   {
     return visitor.VisitaAsignacion(this);
+  }
+}
+
+class Condicional extends Sentencia
+{
+  late Expresion condicion;
+  late List<Sentencia> Entonces;
+  late List<Sentencia>? Sino;
+
+  Condicional(this.condicion,this.Entonces,this.Sino);
+
+  @override
+  R aceptar<R>(VisitorSentencia<R> visitor)
+  {
+    return visitor.VisitaCondicional(this);
   }
 }
