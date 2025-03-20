@@ -100,6 +100,10 @@ class Parser extends ParserBase
     {
       return condicional();
     }
+    if(encontrar([TiposToken.Mientras]))
+    {
+      return mientras();
+    }
     throw RuntimeError('Sentencia ${tokenAct.lexema} no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
@@ -191,6 +195,21 @@ class Parser extends ParserBase
     }
 
     return Condicional(condicion, entonces, sino);
+  }
+
+  Sentencia mientras()
+  {
+    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
+    Expresion condicion = expresion();
+    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
+
+    List<Sentencia> entonces = [];
+    while(!encontrar([TiposToken.Fmientras]))
+    {
+      entonces.add(sentencia());
+    }
+
+    return Mientras(condicion,entonces);
   }
 
   Sentencia asignacion(Token identificador)

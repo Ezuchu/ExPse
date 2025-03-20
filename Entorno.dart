@@ -32,10 +32,12 @@ class Entorno
     {
       if(this.anterior != null)
       {
+        
         return this.anterior!.obtener(id);
       }else
       {
-        throw RuntimeError('Variable no definida',id.fila,null,2);
+        
+        throw RuntimeError('Variable ${id.lexema} no definida',id.fila,null,2);
       }
     }
     return valor;

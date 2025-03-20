@@ -114,14 +114,15 @@ class Interprete implements VisitorExpresion,VisitorSentencia
         throw RuntimeError('Tipo no soportado para lectura', identificador.fila,null,2);
     }
 
-    this.entorno.valores[identificador.lexema] = nValor;
+    entorno.asignar(identificador, nValor);
   }
 
   @override
   VisitaAsignacion(Asignacion asignacion) {
     Token identificador = asignacion.identificador;
 
-    ExValor inicial = global.obtener(identificador);
+    ExValor inicial = entorno.obtener(identificador);
+    
     if(inicial.constante)
     {
       throw RuntimeError('No se puede modificar una constante', identificador.fila,null,2);
@@ -134,7 +135,7 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       throw RuntimeError('Tipos incompatibles', identificador.fila, null, 2);
     }
     
-    this.entorno.valores[identificador.lexema] = valor;
+    this.entorno.asignar(identificador, valor);
   }
 
   @override  
@@ -157,6 +158,18 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     }
 
     this.entorno = previo;
+  }
+
+  @override  
+  VisitaMientras(Mientras mientras) {
+    while(evaluar(mientras.condicion).valor == true)
+    {
+      Entorno previo = this.entorno;
+      this.entorno = new Entorno.local(previo);
+      conjunto(mientras.sentencias);
+
+      this.entorno = previo;
+    }
   }
 
   @override

@@ -1,7 +1,9 @@
 Inicio
-    si(4 == 2+3)
-        escribir("hola");
-    sino
-        escribir("mundo");
-    fsi
+    Entero caja = 1;
+
+    mientras(caja < 4)
+        escribir(caja);
+        caja = caja + 1;
+    fmientras
+    escribir(caja);
 Fin

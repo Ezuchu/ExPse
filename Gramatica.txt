@@ -24,13 +24,19 @@
 <Escribir>:= ESCRIBIR'('<Expresion>')';
 <Leer>:= LEER <Variable>;
 
-<Control>:= <Condicional>
+<Control>:= 
+      <Condicional>
+    | <Ciclo>
 
 <Condicional>:= SI '('<Expresion>')'
                   {Sentencia}+
                 [SINO 
                   {Sentencia}+]
                 FSI
+
+<Ciclo>:= MIENTRAS'('<Expresion>')'
+            {<Sentencia>}+
+          FMIENTRAS
 
 <DecVariable>:= <Tipo> <Identificador> [= <Expresion>];
 <DecConstante>:= CONSTANTE <Identificador> = <Expresion>;
