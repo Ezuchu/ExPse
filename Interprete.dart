@@ -172,6 +172,18 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     }
   }
 
+  @override  
+  VisitaRepeticion(Repeticion repeticion) {
+    do
+    {
+      Entorno previo = this.entorno;
+      this.entorno = Entorno.local(previo);
+
+      conjunto(repeticion.sentencias);
+      this.entorno = previo;
+    }while(evaluar(repeticion.condicion).valor == false);
+  }
+
   @override
   ExValor VisitaVariable(Variable variable)
   {

@@ -38,6 +38,10 @@
             {<Sentencia>}+
           FMIENTRAS
 
+<Repeticion>:= REPETIR 
+                {<Sentencia>}+
+                HASTA '('<Expresion>')';
+
 <DecVariable>:= <Tipo> <Identificador> [= <Expresion>];
 <DecConstante>:= CONSTANTE <Identificador> = <Expresion>;
 

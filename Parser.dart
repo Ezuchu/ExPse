@@ -104,6 +104,10 @@ class Parser extends ParserBase
     {
       return mientras();
     }
+    if(encontrar([TiposToken.Repetir]))
+    {
+      return repeticion();
+    }
     throw RuntimeError('Sentencia ${tokenAct.lexema} no válida', tokenAct.fila, tokenAct.columna, 1);
   }
 
@@ -210,6 +214,23 @@ class Parser extends ParserBase
     }
 
     return Mientras(condicion,entonces);
+  }
+
+  Sentencia repeticion()
+  {
+    List<Sentencia> sentencias = [];
+    while(!encontrar([TiposToken.Hasta]))
+    {
+      sentencias.add(sentencia());
+    }
+
+    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
+    Expresion condicion = expresion();
+    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
+
+    separador();
+
+    return Repeticion(condicion,sentencias);
   }
 
   Sentencia asignacion(Token identificador)
