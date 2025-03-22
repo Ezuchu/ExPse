@@ -162,6 +162,38 @@ class Interprete implements VisitorExpresion,VisitorSentencia
   }
 
   @override  
+  VisitaCaso(Caso caso) {
+    Variable variable = caso.variable;
+    ExValor valor = this.entorno.obtener(variable.identificador);
+    bool encontrado = false;
+
+    caso.casos.forEach((literal,sentencias)
+    {
+      ExValor caso = evaluar(literal);
+      if(valor.valor == caso.valor)
+      {
+        encontrado = true;
+        Entorno previo = this.entorno;
+        this.entorno = Entorno.local(previo);
+
+        conjunto(sentencias);
+        this.entorno = previo;
+        
+        return;
+      }
+    });
+
+    if(caso.casoDefault.isNotEmpty && !encontrado)
+    {
+      Entorno previo = this.entorno;
+      this.entorno = Entorno.local(previo);
+      conjunto(caso.casoDefault);
+      this.entorno = previo;
+    }
+
+  }
+
+  @override  
   VisitaMientras(Mientras mientras) {
     while(evaluar(mientras.condicion).valor == true)
     {

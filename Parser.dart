@@ -101,6 +101,10 @@ class Parser extends ParserBase
     {
       return condicional();
     }
+    if(encontrar([TiposToken.Caso]))
+    {
+      return caso();
+    }
     if(encontrar([TiposToken.Mientras]))
     {
       return mientras();
@@ -204,6 +208,49 @@ class Parser extends ParserBase
     }
 
     return Condicional(condicion, entonces, sino);
+  }
+
+  Sentencia caso()
+  {
+    validar(TiposToken.PARENT_IZQ, 'Se esperaba \'(\'');
+    Expresion variable = literal();
+    if(variable is! Variable)
+    {
+      throw RuntimeError('Se esperaba una variable', previo().fila, previo().columna, 1);
+    }
+    validar(TiposToken.PARENT_DER, 'Se esperaba \')\'');
+
+    Map<Literal,List<Sentencia>> casos = {};
+
+    while(!encontrar([TiposToken.Sino,TiposToken.FCaso]))
+    {
+      validarEOF('No se cerro la estructura de casos');
+      Expresion valor = literal();
+      if(valor is Grupo)
+      {
+        throw RuntimeError('Solo se aceptan valores literales', previo().fila, previo().columna, 1);
+      }
+      validar(TiposToken.DOSPUNTOS, 'Se esperaba \':\'');
+      List<Sentencia> sentencias = [];
+      while(!encontrar([TiposToken.Cierra]))
+      {
+        validarEOF('No se cerro el caso');
+        sentencias.add(sentencia());
+      }
+      casos[valor as Literal] = sentencias;
+    }
+
+    List<Sentencia> casoDefault = [];
+
+    if(previo().tipo == TiposToken.Sino)
+    {
+      while(!encontrar([TiposToken.FCaso]))
+      {
+        validarEOF('No se cerro el caso');
+        casoDefault.add(sentencia());
+      }
+    }
+    return Caso(variable,casos,casoDefault);
   }
 
   Sentencia mientras()

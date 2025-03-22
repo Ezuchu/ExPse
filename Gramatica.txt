@@ -26,6 +26,7 @@
 
 <Control>:= 
       <Condicional>
+    | <Caso>  
     | <Ciclo>
     | <Repeticion>
     | <Para>
@@ -35,6 +36,12 @@
                 [SINO 
                   {Sentencia}+]
                 FSI
+
+<Caso>:= CASO'('<Variable>')'
+          {<Literal> : {<Sentencia>}+}+
+          [SINO 
+            {<Sentencia>}+]
+          FCASO
 
 <Ciclo>:= MIENTRAS'('<Expresion>')'
             {<Sentencia>}+

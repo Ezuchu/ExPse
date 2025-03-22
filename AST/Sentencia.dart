@@ -28,6 +28,7 @@ abstract class VisitorSentencia<R>
   R VisitaAsignacion(Asignacion asignacion);
 
   R VisitaCondicional(Condicional condicional);
+  R VisitaCaso(Caso caso);
   R VisitaMientras(Mientras mientras);
   R VisitaRepeticion(Repeticion repeticion);
   R VisitaPara(Para para);
@@ -136,6 +137,20 @@ class Condicional extends Sentencia
   R aceptar<R>(VisitorSentencia<R> visitor)
   {
     return visitor.VisitaCondicional(this);
+  }
+}
+
+class Caso extends Sentencia
+{
+  late Variable variable;
+  late Map<Literal,List<Sentencia>> casos;
+  late List<Sentencia> casoDefault;
+
+  Caso(this.variable,this.casos,this.casoDefault);
+
+  R aceptar<R>(VisitorSentencia visitor)
+  {
+    return visitor.VisitaCaso(this);
   }
 }
 

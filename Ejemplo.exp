@@ -1,7 +1,16 @@
 Inicio
+    ENTERO caja = 3;
+
+    caso(caja)
+        1: Escribir("hola");
+            cierra
+
+        2: Escribir("mundo");
+            cierra
+
+        SINO
+            Escribir("mmgv");
+    fcaso
     
-    para(i = 1, i <= 5, i++)
-        escribir(i);
-    fpara
 
 Fin
