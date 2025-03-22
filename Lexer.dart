@@ -13,13 +13,29 @@ class Lexer extends LexerBase
     switch(actualChar)
     {
       case '+':
-        sumarToken(TiposToken.Mas, '+', null);
         continuar();
+        if(actualChar == '+')
+        {
+          continuar();
+          sumarToken(TiposToken.Incremento, '++', null);
+        }else
+        {
+          sumarToken(TiposToken.Mas, '+', null);
+        }
         break;
+        
       case '-':
-        sumarToken(TiposToken.Menos, '-', null);
         continuar();
+        if(actualChar == '-')
+        {
+          continuar();
+          sumarToken(TiposToken.Decremento, '--', null);
+        }else
+        {
+          sumarToken(TiposToken.Menos, '-', null);
+        }
         break;
+        
       case '*':
         sumarToken(TiposToken.Por, '*', null);
         continuar();

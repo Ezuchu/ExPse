@@ -27,6 +27,8 @@
 <Control>:= 
       <Condicional>
     | <Ciclo>
+    | <Repeticion>
+    | <Para>
 
 <Condicional>:= SI '('<Expresion>')'
                   {Sentencia}+
@@ -41,6 +43,10 @@
 <Repeticion>:= REPETIR 
                 {<Sentencia>}+
                 HASTA '('<Expresion>')';
+
+<Para>:= PARA'('<Identificador> = <Expresion>,<Expresion>,<Identificador>(++|--)')'
+          {<Sentencia>}+
+         FPARA 
 
 <DecVariable>:= <Tipo> <Identificador> [= <Expresion>];
 <DecConstante>:= CONSTANTE <Identificador> = <Expresion>;

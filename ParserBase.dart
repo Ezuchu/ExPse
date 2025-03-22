@@ -74,6 +74,14 @@ abstract class ParserBase
   {
     return tokenAct.tipo == TiposToken.EOF;
   }
+
+  void validarEOF(String mensaje)
+  {
+    if(encontrar([TiposToken.EOF,TiposToken.Fin]))
+    {
+      throw RuntimeError(mensaje,previo().fila,previo().columna,1);
+    }
+  }
   
   
 }

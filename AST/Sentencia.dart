@@ -30,6 +30,7 @@ abstract class VisitorSentencia<R>
   R VisitaCondicional(Condicional condicional);
   R VisitaMientras(Mientras mientras);
   R VisitaRepeticion(Repeticion repeticion);
+  R VisitaPara(Para para);
   
 }
 
@@ -162,5 +163,21 @@ class Repeticion extends Sentencia
   R aceptar<R>(VisitorSentencia<R> visitor)
   {
     return visitor.VisitaRepeticion(this);
+  }
+}
+
+class Para extends Sentencia
+{
+  late Token identificador;
+  late Expresion inicio;
+  late Expresion fin;
+  late Token accion;
+  late List<Sentencia> sentencias;
+
+  Para(this.identificador,this.inicio,this.fin,this.accion,this.sentencias);
+
+  R aceptar<R>(VisitorSentencia<R> visitor)
+  {
+    return visitor.VisitaPara(this);
   }
 }

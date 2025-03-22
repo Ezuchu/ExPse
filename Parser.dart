@@ -96,6 +96,7 @@ class Parser extends ParserBase
       return leer();
     }
 
+
     if(encontrar([TiposToken.Si]))
     {
       return condicional();
@@ -107,6 +108,10 @@ class Parser extends ParserBase
     if(encontrar([TiposToken.Repetir]))
     {
       return repeticion();
+    }
+    if(encontrar([TiposToken.Para]))
+    {
+      return para();
     }
     throw RuntimeError('Sentencia ${tokenAct.lexema} no válida', tokenAct.fila, tokenAct.columna, 1);
   }
@@ -231,6 +236,52 @@ class Parser extends ParserBase
     separador();
 
     return Repeticion(condicion,sentencias);
+  }
+
+  
+
+  Sentencia para()
+  {
+    validar(TiposToken.PARENT_IZQ,'Se esperaba \'(\'');
+    validar(TiposToken.IDENTIFICADOR,'Se esperaba un identificador de variable');
+
+    Token identificador = previo();
+
+    validar(TiposToken.Igual,'Se esperaba \'=\'');
+
+    Expresion inicial = expresion();
+
+    validar(TiposToken.COMA,'Se esperaba\',\'');
+
+    Expresion fin = expresion();
+
+    validar(TiposToken.COMA,'Se esperaba \',\'');
+
+    validar(TiposToken.IDENTIFICADOR,'Se esperaba un identificador de variable');
+
+    if(previo().lexema != identificador.lexema)
+    {
+      throw RuntimeError('El identificador de la variable de control no coincide',previo().fila,previo().columna,1);
+    }
+
+    if(!encontrar([TiposToken.Incremento,TiposToken.Decremento]))
+    {
+      throw RuntimeError('Se esperaba un operador de incremento o decremento',tokenAct.fila,tokenAct.columna,1);
+    }
+
+    Token accion = previo();
+
+    validar(TiposToken.PARENT_DER,'Se esperaba \')\'');
+
+    List<Sentencia> sentencias = [];
+
+    while(!encontrar([TiposToken.Fpara]))
+    {
+      validarEOF('Se esperaba el cierre del ciclo Para');
+      sentencias.add(sentencia());
+    }
+
+    return Para(identificador,inicial,fin,accion,sentencias);
   }
 
   Sentencia asignacion(Token identificador)

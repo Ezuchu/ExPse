@@ -1,10 +1,7 @@
 Inicio
-    Entero caja = 1;
+    
+    para(i = 1, i <= 5, i++)
+        escribir(i);
+    fpara
 
-    repetir
-        escribir(caja);
-        caja = caja + 1;
-    hasta (caja == 4);
-
-    escribir(caja);
 Fin

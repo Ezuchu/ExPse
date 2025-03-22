@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
@@ -182,6 +183,46 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       conjunto(repeticion.sentencias);
       this.entorno = previo;
     }while(evaluar(repeticion.condicion).valor == false);
+  }
+
+  @override  
+  VisitaPara(Para para)
+  {
+    Token identificador = para.identificador;
+
+    ExValor inicial = evaluar(para.inicio);
+
+    int paso = 1;
+
+    if(para.accion == TiposToken.Decremento)
+    {
+      paso = -1;
+    }
+
+    if(inicial.tipo != EnumTipo.ENTERO)
+    {
+      throw RuntimeError('El valor de inicio debe ser un entero', identificador.fila,null,2);
+    }
+
+    this.entorno.valores[identificador.lexema] = inicial;
+
+    while(evaluar(para.fin).valor == true)
+    {
+      Entorno previo = this.entorno;
+      this.entorno = Entorno.local(previo);
+
+      conjunto(para.sentencias);
+      
+
+      this.entorno = previo;
+
+      ExEntero valor = entorno.obtener(identificador) as ExEntero;
+      valor.valor = valor.valor! + paso;
+    }
+
+    this.entorno.valores.remove(identificador.lexema);
+
+    
   }
 
   @override
