@@ -1,8 +1,6 @@
 Inicio
-    ENTERO valor1 = 5;
-    ENTERO valor2 = 10;
-    Entero valor3 = 20;
-
-    Escribir([valor1,valor2,valor3]);
-    
+    ARREGLO<ENTERO[3]> caja = [1,2,3];   
+    ARREGLO<ARREGLO<ENTERO[2]>[2]> almacen = [[1,2],[2,3]];
+    Escribir(caja);
+    Escribir(almacen);
 Fin

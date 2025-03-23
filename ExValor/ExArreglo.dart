@@ -4,10 +4,12 @@ import 'ExValor.dart';
 class ExArreglo extends ExValor
 {
   late List<ExValor>? valor;
+  late Tipo? contenido;
 
-  ExArreglo(List<ExValor>? valor):super(EnumTipo.ARREGLO)
+  ExArreglo(List<ExValor>? valor,Tipo? contenido):super(EnumTipo.ARREGLO)
   {
     this.valor = valor;
+    this.contenido = contenido;
   }
 
   @override

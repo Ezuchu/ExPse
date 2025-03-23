@@ -1,4 +1,5 @@
 import '../Token.dart';
+import 'Expresion.dart';
 
 enum EnumTipo{
   ENTERO,
@@ -26,4 +27,12 @@ class IdentificadorTipo extends Tipo
   {
     this.identificador = identificador;
   }
+}
+
+class Arreglotipo extends Tipo
+{
+  late Tipo contenido;
+  late Expresion dimension;
+
+  Arreglotipo(this.contenido,this.dimension) : super(EnumTipo.ARREGLO);
 }

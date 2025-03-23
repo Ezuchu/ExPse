@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
@@ -62,8 +61,10 @@ class Interprete implements VisitorExpresion,VisitorSentencia
 
   @override
   VisitaDecVariable(DecVariable decVariable) {
+    
     ExValor valor = genValor(decVariable.tipo,decVariable.valor,decVariable.identificador);
     this.entorno.definir(decVariable.identificador.lexema, valor);
+    
   }
 
   @override  
@@ -287,7 +288,7 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     {
       valores.add(evaluar(elemento));
     }
-    return ExArreglo(valores);
+    return ExArreglo(valores,null);
   }
 
   @override
@@ -483,9 +484,40 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       case EnumTipo.CARACTER : return ExCaracter(inicial as String?);
       case EnumTipo.CADENA : return ExCadena(inicial as String?);
       case EnumTipo.BOOLEANO : return ExBool(inicial as bool?);
+      case EnumTipo.ARREGLO : return decArreglo(tipo as Arreglotipo,inicial as List<ExValor>?,id);
 
       default:
         return ExEntero(5);
     }
+  }
+
+  ExArreglo decArreglo(Arreglotipo tipo,List<ExValor>? inicial,Token id)
+  {
+    ExValor dimension = evaluar(tipo.dimension);
+    EnumTipo contenido = tipo.contenido.tipo;
+    if(dimension is! ExEntero)
+    {
+      throw RuntimeError('La dimension debe ser un numero entero', id.fila, null, 2);
+    }
+    int cantidad = dimension.valor!;
+    List<ExValor> valor = [];
+
+    if(inicial != null)
+    {
+      if(inicial.length != cantidad)
+      {
+        throw RuntimeError('La dimension de los arreglos no coincide', id.fila, null, 2);
+      }
+      for(ExValor elemento in inicial)
+      {
+        if(elemento.tipo != contenido)
+        {
+          throw RuntimeError('los tipos de los arreglos no coinciden', id.fila, null, 2);
+        }
+      }
+      valor = inicial;
+    }
+
+    return ExArreglo(valor,tipo.contenido);
   }
 }

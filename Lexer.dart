@@ -130,6 +130,8 @@ class Lexer extends LexerBase
         sumarToken(TiposToken.CORCHETE_DER, ']', null);
         continuar();
         break;
+      
+      
 
       
       case ' ':case '\t' :case '\r':

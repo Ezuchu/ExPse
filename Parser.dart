@@ -25,7 +25,6 @@ class Parser extends ParserBase
     TiposToken.TipoCaracter: EnumTipo.CARACTER,
     TiposToken.TipoCadena: EnumTipo.CADENA,
     TiposToken.TipoBooleano: EnumTipo.BOOLEANO,
-    TiposToken.TipoArreglo: EnumTipo.ARREGLO
   };
 
   Map<TiposToken,EnumTipo> mapaTiposLiteral = 
@@ -133,13 +132,19 @@ class Parser extends ParserBase
   {
     Token tipo = previo();
     late Tipo tipoVar;
-    if(tipos.contains(tipo.tipo))
+
+    if(mapaTipos.containsKey(tipo.tipo))
     {
       tipoVar = Tipo(mapaTipos[tipo.tipo]!);
     }else
     {
-      tipoVar = IdentificadorTipo(EnumTipo.IDENTIFICADOR, tipo);
+      if(tipo.tipo == TiposToken.TipoArreglo)
+      {
+        tipoVar = tipoArreglo();
+      }
     }
+
+
 
     validar(TiposToken.IDENTIFICADOR, 'Se esperaba un identificador');
     Token identificador = previo();
@@ -497,6 +502,33 @@ class Parser extends ParserBase
       return Grupo(expr);
     }
     throw RuntimeError('Expresión no válida',tokenAct.fila,tokenAct.columna,1);
+  }
+
+  Tipo obtenerTipo()
+  {
+    if(!encontrar(tipos))
+    {
+      throw RuntimeError('${tokenAct.lexema} no es un tipo válido',tokenAct.fila,tokenAct.columna,1);
+    }
+    Token tipo = previo();
+
+    if(mapaTipos.containsKey(tipo.tipo))
+    {
+      return Tipo(mapaTipos[tipo.tipo]!);
+    }
+    return tipoArreglo();
+  }
+
+  Arreglotipo tipoArreglo()
+  {
+    validar(TiposToken.Menor, 'Se esperaba \'<\'');
+    Tipo contenido = obtenerTipo();
+    validar(TiposToken.CORCHETE_IZQ, 'Se esperaba \'[\'');
+    Expresion dimension = expresion();
+    validar(TiposToken.CORCHETE_DER, 'Se esperaba \']\'');
+    validar(TiposToken.Mayor, 'Se esperaba \'>\'');
+
+    return Arreglotipo(contenido, dimension);
   }
 
   

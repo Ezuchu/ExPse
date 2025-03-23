@@ -6,6 +6,8 @@ enum TiposToken
   CORCHETE_DER,
   LLAVE_IZQ,
   LLAVE_DER,
+  BRACKET_IZQ,
+  BRACKET_DER,
   Punto,
   DOSPUNTOS,
   COMA,
