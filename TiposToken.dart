@@ -32,7 +32,7 @@ enum TiposToken
   Fpara,
   Hasta,
   Repetir,
-  Arreglo,
+  
   De,
   Registro,
   Fregistro,
@@ -95,6 +95,7 @@ enum TiposToken
   TipoCaracter,
   TipoCadena,
   TipoBooleano,
+  TipoArreglo,
 
 
   NUMERO,
@@ -137,7 +138,7 @@ const Map<String,TiposToken> mapaTipos = {
   'fpara': TiposToken.Fpara,
   'hasta': TiposToken.Hasta,
   'repetir': TiposToken.Repetir,
-  'arreglo': TiposToken.Arreglo,
+  
   'de': TiposToken.De,
   'registro': TiposToken.Registro,
   'fregistro': TiposToken.Fregistro,
@@ -155,11 +156,13 @@ const Map<String,TiposToken> mapaTipos = {
   'cerrararchivo': TiposToken.CerrarArchivo,
   'verdadero':TiposToken.VERDADERO,
   'falso':TiposToken.FALSO,
-  
+
+
   'entero': TiposToken.TipoEntero,
   'real': TiposToken.TipoReal,
   'caracter':TiposToken.TipoCaracter,
   'cadena':TiposToken.TipoCadena,
   'bool':TiposToken.TipoBooleano,
+  'arreglo': TiposToken.TipoArreglo
 };
 

@@ -7,7 +7,7 @@ enum EnumTipo{
   CADENA,
   BOOLEANO,
 
-
+  ARREGLO,
 
   IDENTIFICADOR
 }

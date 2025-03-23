@@ -1,16 +1,8 @@
 Inicio
-    ENTERO caja = 3;
+    ENTERO valor1 = 5;
+    ENTERO valor2 = 10;
+    Entero valor3 = 20;
 
-    caso(caja)
-        1: Escribir("hola");
-            cierra
-
-        2: Escribir("mundo");
-            cierra
-
-        SINO
-            Escribir("mmgv");
-    fcaso
+    Escribir([valor1,valor2,valor3]);
     
-
 Fin

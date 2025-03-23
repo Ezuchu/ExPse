@@ -11,14 +11,21 @@ class Parser extends ParserBase
   Parser(super.tokens);
 
   
-  List<TiposToken> tipos = [TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano];
+  List<TiposToken> tipos = [
+    TiposToken.TipoEntero,
+    TiposToken.TipoReal,
+    TiposToken.TipoCaracter,
+    TiposToken.TipoCadena,
+    TiposToken.TipoBooleano,
+    TiposToken.TipoArreglo];
 
   Map<TiposToken,EnumTipo> mapaTipos = {
     TiposToken.TipoEntero: EnumTipo.ENTERO,
     TiposToken.TipoReal: EnumTipo.REAL,
     TiposToken.TipoCaracter: EnumTipo.CARACTER,
     TiposToken.TipoCadena: EnumTipo.CADENA,
-    TiposToken.TipoBooleano: EnumTipo.BOOLEANO
+    TiposToken.TipoBooleano: EnumTipo.BOOLEANO,
+    TiposToken.TipoArreglo: EnumTipo.ARREGLO
   };
 
   Map<TiposToken,EnumTipo> mapaTiposLiteral = 
@@ -44,7 +51,7 @@ class Parser extends ParserBase
     {
       return principal();
     }
-    if(encontrar([TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano]))
+    if(encontrar(tipos))
     {
       return decVariable();
     }
@@ -69,7 +76,7 @@ class Parser extends ParserBase
   Sentencia sentencia()
   {
     
-    if(encontrar([TiposToken.TipoEntero,TiposToken.TipoReal,TiposToken.TipoCaracter,TiposToken.TipoCadena,TiposToken.TipoBooleano]))
+    if(encontrar(tipos))
     {
       return decVariable();
     }
@@ -462,6 +469,22 @@ class Parser extends ParserBase
       return Literal(previo().literal,tipo,previo().columna,previo().fila);
     }
 
+    if(encontrar([TiposToken.CORCHETE_IZQ]))
+    {
+      Token inicio = previo();
+      List<Expresion> elementos = [];
+      while(!encontrar([TiposToken.CORCHETE_DER]))
+      {
+        validarEOF('No se cerró el arreglo');
+        if(elementos.length >= 1)
+        {
+          validar(TiposToken.COMA, 'Se esperaba \',\' para separar elementos');
+        }
+        elementos.add(expresion());
+      }
+      return Arreglo(elementos, inicio.fila, inicio.columna);
+    }
+
     if(encontrar([TiposToken.IDENTIFICADOR]))
     {
       return Variable(previo());
@@ -475,4 +498,6 @@ class Parser extends ParserBase
     }
     throw RuntimeError('Expresión no válida',tokenAct.fila,tokenAct.columna,1);
   }
+
+  
 }

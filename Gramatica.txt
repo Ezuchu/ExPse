@@ -63,6 +63,7 @@
     | <Binario>
     | <Unario>
     | <Literal>
+    | <Arreglo>
     | <Grupo>
 
 <Logico>:= <Expresion> (Y|O) <Expresion>
@@ -70,6 +71,8 @@
 <Binario>:= <Expresion> (+|-|*|/|%|==|!=|>|>=|<|<=) <Expresion>
 
 <Unario>:= (!|-)<Expresion>
+
+<Arreglo>:= '['{<Expresion>[,]}+']'
 
 <Literal>:= 
       <Cadena>
@@ -84,9 +87,12 @@
 
 <Tipo>:= 
     | <Primitivo>
+    | <DecArreglo>
     | <Identificador>
 
 <Primitivo>:= (ENTERO | REAL | CADENA | CARACTER | BOOLEANO)
+
+<DecArreglo>:= ARREGLO '<' <Tipo> '['<Expresion>']' '>'
 
 
 <Cadena>:= "{(<Numero>|<Letra>|<Simbolo>)}*"

@@ -4,6 +4,7 @@ import 'dart:math';
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
 import 'Entorno.dart';
+import 'ExValor/ExArreglo.dart';
 import 'ExValor/ExBool.dart';
 import 'ExValor/ExCadena.dart';
 import 'ExValor/ExCaracter.dart';
@@ -276,6 +277,17 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       default:
         return ExEntero(5);
     }
+  }
+
+  @override
+  ExValor VisitaArreglo(Arreglo arreglo)
+  {
+    List<ExValor> valores = [];
+    for(Expresion elemento in arreglo.elementos)
+    {
+      valores.add(evaluar(elemento));
+    }
+    return ExArreglo(valores);
   }
 
   @override

@@ -10,6 +10,7 @@ abstract class VisitorExpresion<R>{
   R VisitaBinario(Binario binario);
   R VisitaGrupo(Grupo grupo);
   R VisitaLiteral(Literal literal);
+  R VisitaArreglo(Arreglo arreglo);
   R VisitaUnario(Unario unario);
   R VisitaLogico(Logico logico);
   R VisitaVariable(Variable variable);
@@ -62,6 +63,21 @@ class Literal extends Expresion
   R aceptar<R>(VisitorExpresion visitor) {
     return visitor.VisitaLiteral(this);
   }
+}
+
+class Arreglo extends Expresion
+{
+  late List<Expresion> elementos;
+  late int fila;
+  late int columna;
+
+  Arreglo(this.elementos,this.fila,this.columna);
+  
+  @override
+  R aceptar<R>(VisitorExpresion visitor) {
+    return visitor.VisitaArreglo(this);
+  }
+
 }
 
 class Unario extends Expresion
