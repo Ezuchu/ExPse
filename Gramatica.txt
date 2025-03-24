@@ -62,6 +62,7 @@
       <Logico>
     | <Binario>
     | <Unario>
+    | <Indice>
     | <Literal>
     | <Arreglo>
     | <Grupo>
@@ -73,6 +74,8 @@
 <Unario>:= (!|-)<Expresion>
 
 <Arreglo>:= '['{<Expresion>[,]}+']'
+
+<Indice>:= <Expresion>{'['<Expresion>']'}+
 
 <Literal>:= 
       <Cadena>

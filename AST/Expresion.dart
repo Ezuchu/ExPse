@@ -11,6 +11,7 @@ abstract class VisitorExpresion<R>{
   R VisitaGrupo(Grupo grupo);
   R VisitaLiteral(Literal literal);
   R VisitaArreglo(Arreglo arreglo);
+  R VisitaIndice(Indice indice);
   R VisitaUnario(Unario unario);
   R VisitaLogico(Logico logico);
   R VisitaVariable(Variable variable);
@@ -78,6 +79,20 @@ class Arreglo extends Expresion
     return visitor.VisitaArreglo(this);
   }
 
+}
+
+class Indice extends Expresion
+{
+  late Variable variable;
+  late List<Expresion> indices;
+
+  Indice(this.variable,this.indices);
+
+  @override   
+  R aceptar<R>(VisitorExpresion visitor)
+  {
+    return visitor.VisitaIndice(this);
+  }
 }
 
 class Unario extends Expresion

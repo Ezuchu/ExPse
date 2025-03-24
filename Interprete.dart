@@ -291,6 +291,29 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     return ExArreglo(valores,null);
   }
 
+  @override  
+  ExValor VisitaIndice(Indice indice)
+  {
+    Token id = indice.variable.identificador;
+    ExValor arreglo = entorno.obtener(id);
+    if(arreglo is! ExArreglo)
+    {
+      throw RuntimeError('La variable ${id.lexema} no es un arreglo', id.fila, null, 2);
+    }
+    List<ExEntero> indices = [];
+    for(Expresion expresion in indice.indices)
+    {
+      ExValor nIndice = evaluar(expresion);
+      if(nIndice is! ExEntero)
+      {
+        throw RuntimeError('Se esperaba una expresion entera en los indices de ${id.lexema}', id.fila, null, 2);
+      }
+      indices.add(nIndice as ExEntero);
+    }
+
+    return arreglo.obtener(indices,id);
+  }
+
   @override
   ExValor VisitaGrupo(Grupo grupo) {
     return evaluar(grupo.expresion);

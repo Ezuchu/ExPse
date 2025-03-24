@@ -460,7 +460,30 @@ class Parser extends ParserBase
       return Unario(operador, der);
     }
 
-    return literal();
+    return index();
+  }
+
+  Expresion index()
+  {
+    Token id = tokenAct;
+    Expresion expr = literal();
+    List<Expresion> indices = [];
+
+    while(encontrar([TiposToken.CORCHETE_IZQ]))
+    {
+      indices.add(expresion());
+      validar(TiposToken.CORCHETE_DER, 'Se esperaba \']\'');
+    }
+
+    if(indices.isNotEmpty)
+    {
+      if(expr is! Variable)
+      {
+        throw RuntimeError('Se esperaba un identificador de variable', id.fila, id.columna, 1);
+      }
+      return Indice(expr, indices);
+    }
+    return expr;
   }
 
   Expresion literal()

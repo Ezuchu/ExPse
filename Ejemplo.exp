@@ -1,6 +1,4 @@
 Inicio
     ARREGLO<ENTERO[3]> caja = [1,2,3];   
-    ARREGLO<ARREGLO<ENTERO[2]>[2]> almacen = [[1,2],[2,3]];
-    Escribir(caja);
-    Escribir(almacen);
+    Escribir(caja[2]);
 Fin
