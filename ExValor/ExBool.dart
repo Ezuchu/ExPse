@@ -8,6 +8,11 @@ class ExBool extends ExValor {
     this.valor = valor;
   }
 
+  asignar(ExValor der)
+  {
+    this.valor = der.valor;
+  }
+
   @override
   String toString() {
     switch (valor) {

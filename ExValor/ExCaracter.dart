@@ -10,6 +10,11 @@ class ExCaracter extends ExValor
     this.valor = valor;
   }
 
+  asignar(ExValor der)
+  {
+    this.valor = der.valor;
+  }
+
   @override
   String toString() {
     return valor.toString();

@@ -122,23 +122,30 @@ class Interprete implements VisitorExpresion,VisitorSentencia
 
   @override
   VisitaAsignacion(Asignacion asignacion) {
-    Token identificador = asignacion.identificador;
+    Expresion izq = asignacion.variable;
+    Token id = asignacion.id;
 
-    ExValor inicial = entorno.obtener(identificador);
+    
+    if(izq is! Variable && izq is! Indice)
+    {
+      throw RuntimeError('La expresion izquierda debe ser una variable', id.fila, null, 2);
+    }
+
+    ExValor inicial = evaluar(izq);
     
     if(inicial.constante)
     {
-      throw RuntimeError('No se puede modificar una constante', identificador.fila,null,2);
+      throw RuntimeError('No se puede modificar una constante', id.fila,null,2);
     }
 
     ExValor valor = evaluar(asignacion.valor);
     valor.constante = false;
 
     if(inicial.tipo != valor.tipo) {
-      throw RuntimeError('Tipos incompatibles', identificador.fila, null, 2);
+      throw RuntimeError('Tipos incompatibles', id.fila, null, 2);
     }
     
-    this.entorno.asignar(identificador, valor);
+    inicial.asignar(valor);
   }
 
   @override  

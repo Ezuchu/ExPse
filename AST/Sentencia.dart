@@ -113,10 +113,11 @@ class Leer extends Sentencia
 
 class Asignacion extends Sentencia
 {
-  late Token identificador;
+  late Token id;
+  late Expresion variable;
   late Expresion valor;
 
-  Asignacion(this.identificador,this.valor);
+  Asignacion(this.id,this.variable,this.valor);
 
   @override
   R aceptar<R>(VisitorSentencia<R> visitor)

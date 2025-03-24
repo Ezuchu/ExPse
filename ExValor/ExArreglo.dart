@@ -15,6 +15,11 @@ class ExArreglo extends ExValor
     this.contenido = contenido;
   }
 
+  asignar(ExValor der)
+  {
+    this.valor = der.valor;
+  }
+
   ExValor obtener(List<ExEntero> indice,Token id)
   {
     ExEntero act = indice[0];

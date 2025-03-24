@@ -9,5 +9,8 @@ abstract class ExValor
 
   get valor => null;
 
+  asignar(ExValor valor);
+
+  
   
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'AST/Expresion.dart';
 import 'AST/Tipos.dart';
 import 'ParserBase.dart';
@@ -86,11 +88,8 @@ class Parser extends ParserBase
 
     if(encontrar([TiposToken.IDENTIFICADOR]))
     {
-      Token identificador = previo();
-      if(!encontrar([TiposToken.PARENT_IZQ]))
-      {
-        return asignacion(identificador);
-      }
+      retroceder();
+      return asignacion();
     }
 
     if(encontrar([TiposToken.Escribir]))
@@ -343,13 +342,15 @@ class Parser extends ParserBase
     return Para(identificador,inicial,fin,accion,sentencias);
   }
 
-  Sentencia asignacion(Token identificador)
+  Sentencia asignacion()
   {
+    Token id = tokenAct;
+    Expresion variable = index();
     validar(TiposToken.Igual, 'Se esperaba \'=\'');
     Expresion expr = expresion();
     separador();
 
-    return Asignacion(identificador, expr);
+    return Asignacion(id,variable, expr);
   }
 
   
@@ -468,6 +469,8 @@ class Parser extends ParserBase
     Token id = tokenAct;
     Expresion expr = literal();
     List<Expresion> indices = [];
+
+    
 
     while(encontrar([TiposToken.CORCHETE_IZQ]))
     {

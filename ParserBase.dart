@@ -29,6 +29,12 @@ abstract class ParserBase
     tokenAct = tokens[tActual];
   }
 
+  retroceder()
+  {
+    tActual--;
+    tokenAct = tokens[tActual];
+  }
+
   bool encontrar(List<TiposToken> tipos)
   {
     for(TiposToken tipo in tipos)
