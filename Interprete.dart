@@ -82,17 +82,17 @@ class Interprete implements VisitorExpresion,VisitorSentencia
 
   @override  
   VisitaLeer(Leer leer) {
-    Token identificador = leer.variable.identificador;
-    ExValor variable = entorno.obtener(identificador);
+    Token id = leer.id;
+    ExValor variable = evaluar(leer.variable);
     late ExValor nValor;
 
     if(variable.constante)
     {
-      throw RuntimeError('No se puede modificar una constante', identificador.fila,null,2);
+      throw RuntimeError('No se puede modificar una constante', id.fila,null,2);
     }
     if(variable is ExBool)
     {
-      throw RuntimeError('No se puede leer un booleano', identificador.fila,null,2);
+      throw RuntimeError('No se puede leer un booleano', id.fila,null,2);
     }
 
     String entrada = stdin.readLineSync()!;
@@ -100,11 +100,11 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     switch(variable.tipo)
     {
       case EnumTipo.ENTERO:
-        esEntero(entrada,identificador);
+        esEntero(entrada,id);
         nValor = ExEntero(int.parse(entrada));
         break;
       case EnumTipo.REAL:
-        esReal(entrada,identificador);
+        esReal(entrada,id);
         nValor = ExReal(double.parse(entrada));
         break;
       case EnumTipo.CARACTER:
@@ -114,10 +114,10 @@ class Interprete implements VisitorExpresion,VisitorSentencia
         nValor = ExCadena(entrada);
         break;
       default:
-        throw RuntimeError('Tipo no soportado para lectura', identificador.fila,null,2);
+        throw RuntimeError('Tipo no soportado para lectura', id.fila,null,2);
     }
 
-    entorno.asignar(identificador, nValor);
+    variable.asignar(nValor,id);
   }
 
   @override
@@ -141,11 +141,9 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     ExValor valor = evaluar(asignacion.valor);
     valor.constante = false;
 
-    if(inicial.tipo != valor.tipo) {
-      throw RuntimeError('Tipos incompatibles', id.fila, null, 2);
-    }
     
-    inicial.asignar(valor);
+    
+    inicial.asignar(valor,id);
   }
 
   @override  
@@ -295,15 +293,15 @@ class Interprete implements VisitorExpresion,VisitorSentencia
     {
       valores.add(evaluar(elemento));
     }
-    return ExArreglo(valores,null);
+    return ExArreglo(valores,null,valores.length);
   }
 
   @override  
-  ExValor VisitaIndice(Indice indice)
+  ExValor? VisitaIndice(Indice indice)
   {
     Token id = indice.variable.identificador;
     ExValor arreglo = entorno.obtener(id);
-    if(arreglo is! ExArreglo)
+    if(arreglo is! ExArreglo && arreglo is! ExCadena)
     {
       throw RuntimeError('La variable ${id.lexema} no es un arreglo', id.fila, null, 2);
     }
@@ -318,7 +316,16 @@ class Interprete implements VisitorExpresion,VisitorSentencia
       indices.add(nIndice as ExEntero);
     }
 
-    return arreglo.obtener(indices,id);
+    if(arreglo is ExCadena)
+    {
+      if(indices.length > 1)
+      {
+        throw RuntimeError('La cantidad de indices supera las dimensiones de la cadena', id.fila, null, 2);
+      }
+      return arreglo.obtener(indices[0].valor!, id);
+    }
+
+    return (arreglo as ExArreglo).obtener(indices,id);
   }
 
   @override
@@ -546,8 +553,11 @@ class Interprete implements VisitorExpresion,VisitorSentencia
         }
       }
       valor = inicial;
+    }else
+    {
+      valor = List<ExValor>.generate(cantidad, (int index) => genValor(tipo.contenido, null, id));
     }
 
-    return ExArreglo(valor,tipo.contenido);
+    return ExArreglo(valor,tipo.contenido,cantidad);
   }
 }

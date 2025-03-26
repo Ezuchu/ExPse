@@ -1,4 +1,5 @@
 import '../AST/Tipos.dart';
+import '../Token.dart';
 
 abstract class ExValor 
 {
@@ -9,7 +10,7 @@ abstract class ExValor
 
   get valor => null;
 
-  asignar(ExValor valor);
+  asignar(ExValor valor, Token id);
 
   
   

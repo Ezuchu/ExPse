@@ -1,0 +1,111 @@
+INICIO
+	ARREGLO<ARREGLO<CARACTER[8]>[8]> Tablero;
+	ARREGLO<CADENA[6]> ListaPiezas = ["peon","torre","alfil","caballo","reina","rey"];
+	CARACTER Salida;
+	
+	REPETIR
+		ENTERO indice = 6;
+		CADENA Pieza;
+		CARACTER Color;
+		ENTERO FILA;
+		ENTERO COLUMNA;
+		ENTERO iDistancia;
+		ENTERO jDistancia;
+		ENTERO VALIDO = 1;
+		
+		PARA(i = 0, i < 8, i++)
+			PARA(j = 0, j < 8, j++)
+				Tablero[i][j] = ' ';
+			FPARA
+		FPARA
+		
+		ESCRIBIR("Ingrese el nombre de la pieza");
+		Leer Pieza;
+		ESCRIBIR("Ingrese color");
+		Leer Color;
+		ESCRIBIR("Ingrese Fila");
+		Leer FILA;
+		ESCRIBIR("Ingrese Columna");
+		Leer COLUMNA;
+
+		FILA = FILA - 1;
+		COLUMNA = COLUMNA -1;
+
+		PARA(i = 0, i < 8, i++)
+			iDistancia = i - FILA;
+			SI(iDistancia < 0)
+				iDistancia = -iDistancia;
+			FSI
+
+			PARA(j = 0, j < 8, j++)
+				jDistancia = j - COLUMNA;
+				SI(jDistancia < 0)
+					jDistancia = -jDistancia;
+				FSI
+
+				CASO(Pieza)
+					"peon": 
+						SI(Color == 'b')
+							SI(((i == FILA - 1) O (FILA == 6 Y i >= FILA - 2)) Y i < FILA Y j == COLUMNA)
+								Tablero[i][j] = 'X';
+								
+							FSI
+						SINO
+							SI(((i == FILA + 1) O (FILA == 1 Y i >= FILA + 2)) Y i > FILA Y j == COLUMNA)
+								Tablero[i][j] = 'X';
+							FSI
+						FSI
+						CIERRA
+
+					"torre": 
+						SI(i == FILA O j == COLUMNA)
+							Tablero[i][j] = 'X';
+						FSI
+						CIERRA
+
+					"alfil":
+						SI(iDistancia == jDistancia)
+							Tablero[i][j] = 'X';
+						FSI
+						CIERRA
+					
+					"caballo":
+						SI((iDistancia == 2 Y jDistancia == 1) O (iDistancia == 1 Y jDistancia == 2))
+							Tablero[i][j] = 'X';
+						FSI
+						CIERRA
+
+					"reina":
+						SI(i == FILA O j == COLUMNA O iDistancia == jDistancia)
+							Tablero[i][j] = 'X';
+						FSI
+						CIERRA
+					
+					"rey":
+						SI((iDistancia == 1 Y j == COLUMNA) O (jDistancia == 1 Y i == FILA) O (iDistancia == 1 Y jDistancia == 1))
+							Tablero[i][j] = 'X';
+						FSI
+						CIERRA
+
+					SINO
+						VALIDO = 0;
+				FCASO
+			FPARA
+		FPARA
+
+		Tablero[FILA][COLUMNA] = Pieza[0];
+
+		SI(VALIDO == 1)
+			PARA(i = 0, i < 8, i++)
+				ESCRIBIR(Tablero[i]);
+			FPARA
+		SINO
+			ESCRIBIR("DATOS invalidos");
+			VALIDO = 1;
+		FSI
+
+		ESCRIBIR("volver a intentarlo?");
+		LEER Salida;
+	
+	HASTA(Salida == 'n');
+FIN

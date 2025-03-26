@@ -1,7 +1,8 @@
 Inicio
-    ARREGLO<ENTERO[3]> caja = [1,2,3];
-    ESCRIBIR(caja);
-    caja[1] = 4;
+    ARREGLO<ENTERO[3]> caja;
+    caja[0] = 4;
+    caja[1] = 5;
+    caja[2] = 6;
     ESCRIBIR(caja);
     
 Fin

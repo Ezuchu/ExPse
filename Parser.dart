@@ -185,13 +185,14 @@ class Parser extends ParserBase
 
   Sentencia leer()
   {
-    Expresion variable = literal();
-    if(variable is! Variable)
+    Token key = previo();
+    Expresion variable = index();
+    if(variable is! Variable && variable is! Indice)
     {
       throw RuntimeError('Se esperaba una variable', tokenAct.fila, tokenAct.columna, 1);
     }
     separador();
-    return Leer(variable as Variable);
+    return Leer(key,variable);
   }
 
   Sentencia condicional()

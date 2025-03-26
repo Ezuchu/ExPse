@@ -1,4 +1,7 @@
 import '../AST/Tipos.dart';
+import '../RuntimeError.dart';
+import '../Token.dart';
+import 'ExEntero.dart';
 import 'ExValor.dart';
 
 class ExReal extends ExValor 
@@ -11,8 +14,12 @@ class ExReal extends ExValor
   }
 
   @override
-  asignar(ExValor der)
+  asignar(ExValor der, Token id)
   {
+    if(der is! ExReal && der is! ExEntero)
+    {
+      throw RuntimeError('Tipos incompatibles', id.fila, null, 2);
+    }
     this.valor = der.valor;
   }
 

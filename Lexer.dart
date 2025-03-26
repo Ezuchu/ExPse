@@ -155,6 +155,10 @@ class Lexer extends LexerBase
         continuar();
         break;
 
+
+      case '\'':
+        caracter();
+        break;
       case '\"':
         cadena();
         break;

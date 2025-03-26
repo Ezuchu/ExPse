@@ -100,9 +100,10 @@ class Escribir extends Sentencia
 
 class Leer extends Sentencia
 {
-  late Variable variable;
+  late Token id;
+  late Expresion variable;
 
-  Leer(this.variable);
+  Leer(this.id,this.variable);
 
   @override
   R aceptar<R>(VisitorSentencia<R> visitor)

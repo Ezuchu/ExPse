@@ -7,10 +7,10 @@ import 'Parser.dart';
 void main()
 {
   
-
+  
   try
   {
-    String codigo = File("Ejemplo.exp").readAsStringSync();
+    String codigo = File("Ejemplo2.exp").readAsStringSync();
 
     Lexer lexer = new Lexer(codigo);
     Parser parser = new Parser(lexer.escanearTokens());
